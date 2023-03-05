@@ -1,0 +1,66 @@
+name: kabor_driver
+description: A Very Good Project created by Very Good CLI.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: 3.0.5
+
+dependencies:
+  bloc: ^8.1.0
+  chat_bubbles: ^1.3.1
+  equatable: ^2.0.5
+  fl_chart: ^0.55.2
+  flutter_hooks: ^0.18.5+1
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_rating_bar: ^4.0.1
+  flutter_svg: ^1.1.5
+  freezed_annotation: ^2.1.0
+  gap: ^2.0.0
+  geolocator: ^9.0.2
+  go_router: ^5.1.0
+  google_fonts: ^3.0.1
+  google_maps_flutter: ^2.2.1
+  google_place: ^0.4.7
+  hooks_riverpod: ^2.0.1
+  iconsax: ^0.0.8
+  intl: ^0.17.0
+  location: ^4.4.0
+#  modal_bottom_sheet: ^2.1.2
+  modal_bottom_sheet:
+    git:
+      url: https://github.com/eli1stark/modal_bottom_sheet.git
+      ref: main
+      path: modal_bottom_sheet
+  percent_indicator: ^4.2.2
+  pin_code_fields: ^7.4.0
+  rxdart: ^0.27.5
+  flutter_switch: ^0.3.2
+  smooth_page_indicator: ^1.0.0+2
+  syncfusion_flutter_datepicker: ^20.3.59
+  timelines: ^0.1.0
+  date_field: ^3.0.2
+  adaptive_dialog: ^1.8.0+1
+  syncfusion_flutter_barcodes: ^20.3.61
+  share_plus: ^6.3.0
+
+
+dev_dependencies:
+  bloc_test: ^9.1.0
+  flutter_test:
+    sdk: flutter
+  mocktail: ^0.3.0
+  very_good_analysis: ^3.0.1
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
