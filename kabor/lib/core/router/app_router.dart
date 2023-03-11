@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kabor/app/app.dart';
 import 'package:kabor/core/core.dart';
 import 'package:kabor/features/accept_order/views/accept_order_page.dart';
 import 'package:kabor/features/add_photo/add_photo.dart';
@@ -71,12 +74,15 @@ class AppRouter {
   @visibleForTesting
   String setInitialLocation(String location) => initialLocation = location;
 
-  GoRouter _router() => GoRouter(
-        initialLocation: AppRoutePaths.landing,
-        routes: routes,
-        refreshListenable: _ref.read(routerProvider),
-        redirect: _ref.read(routerProvider.notifier).redirect,
-      );
+  GoRouter _router() {
+    final routerGuard = RouterGuard(_ref);
+    return GoRouter(
+      initialLocation: AppRoutePaths.landing,
+      routes: routes,
+      redirect: (context, state) => routerGuard.redirect(state),
+      refreshListenable: _ref.read(routerProvider),
+    );
+  }
 
   ///List of all the router
   static List<GoRoute> routes = <GoRoute>[
@@ -788,4 +794,30 @@ class AppRouter {
       ],
     ),
   ];
+}
+
+class RouterGuard extends ChangeNotifier {
+  RouterGuard(this.ref) {
+    ref.listenManual(
+      appVMProvider,
+      (_, __) => notifyListeners(),
+    );
+  }
+
+  final WidgetRef ref;
+
+  FutureOr<String?> redirect(GoRouterState state) {
+    final authStatus =
+        ref.watch(appVMProvider.select((value) => value.authStatus));
+
+    final isLoginPage = state.location == AppRoutes.login;
+    print(authStatus);
+
+    if (authStatus == AuthStatus.unauthenticated) {
+      return isLoginPage ? null : AppRoutePaths.login;
+    } else if (authStatus == AuthStatus.authenticated) {
+      return AppRoutePaths.authWelcome;
+    }
+    return null;
+  }
 }

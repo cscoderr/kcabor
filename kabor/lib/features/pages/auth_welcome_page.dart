@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kabor/app/app.dart';
 import 'package:kabor/core/core.dart';
 
-class AuthWelcomePage extends StatelessWidget {
+class AuthWelcomePage extends ConsumerWidget {
   const AuthWelcomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(appVMProvider.select((value) => value.user));
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -17,8 +20,8 @@ class AuthWelcomePage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Welcome Munah,',
-                style: context.$style.headline5!.copyWith(
+                'Welcome ${user.fName},',
+                style: context.$style.headlineSmall!.copyWith(
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
                 ),

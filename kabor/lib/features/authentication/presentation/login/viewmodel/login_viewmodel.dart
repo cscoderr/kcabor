@@ -11,7 +11,7 @@ class LoginViewModel extends StateNotifier<AsyncValue<void>> {
   }) async {
     print(email);
     state = const AsyncLoading();
-    final result = await ref.read(customerAuthRepositoryProvider).login(
+    final result = await ref.read(authRepositoryProvider).login(
           emailOrPhone: email,
           password: password,
         );

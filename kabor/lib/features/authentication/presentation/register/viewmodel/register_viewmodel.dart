@@ -9,7 +9,7 @@ class RegisterViewModel extends StateNotifier<AsyncValue<void>> {
   Future<void> register(AuthModel model) async {
     print(model.toString());
     state = const AsyncLoading();
-    final result = await ref.read(customerAuthRepositoryProvider).register(
+    final result = await ref.read(authRepositoryProvider).register(
           firstName: model.firstName ?? '',
           lastName: model.lastName ?? '',
           email: model.email ?? '',

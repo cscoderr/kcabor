@@ -16,6 +16,8 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.5
+  kcabor_storage:
+    path: ../kcabor_storage
 
 dev_dependencies:
   flutter_test:

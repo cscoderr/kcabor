@@ -12,7 +12,7 @@ class CheckEmailViewModel extends AutoDisposeAsyncNotifier<BaseModel> {
 
   Future<void> checkEmail(String email) async {
     state = const AsyncLoading();
-    final result = await ref.read(customerAuthRepositoryProvider).checkEmail(
+    final result = await ref.read(authRepositoryProvider).checkEmail(
           email: email,
         );
     return result.fold(
@@ -24,4 +24,5 @@ class CheckEmailViewModel extends AutoDisposeAsyncNotifier<BaseModel> {
 
 final checkEmailVMProvider =
     AutoDisposeAsyncNotifierProvider<CheckEmailViewModel, BaseModel>(
-        CheckEmailViewModel.new);
+  CheckEmailViewModel.new,
+);

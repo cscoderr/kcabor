@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:google_place/google_place.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/app/app.dart';
+import 'package:kcabor_storage/kcabor_storage.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SearchException implements Exception {
@@ -16,6 +19,10 @@ class SearchException implements Exception {
 }
 
 class KaborRepositoryImpl implements KaborRepository {
+  KaborRepositoryImpl({required this.storage});
+
+  final KcaborStorage storage;
+
   final googlePlace = GooglePlace(
     'AIzaSyAZ8qO-8-ZBW3TzNzBfhUCBNxpU8-EX9ss',
     // const String.fromEnvironment('GOOGLE_API_KEY'),
@@ -72,8 +79,27 @@ class KaborRepositoryImpl implements KaborRepository {
       yield await _searchGoogleAddress(query);
     });
   }
+
+  @override
+  Stream<AuthStatus> get authStatus async* {
+    final hasUser = await storage.check('kcabor_user');
+    final hasToken = await storage.check('kcabor_token');
+    if (hasUser && hasToken) {
+      yield AuthStatus.authenticated;
+    }
+    yield AuthStatus.unauthenticated;
+  }
+
+  @override
+  Future<UserModel> get user async {
+    final user = await storage.read('kcabor_user');
+    final jsonData = jsonDecode(user!) as Map<String, dynamic>;
+    return UserModel.fromJson(jsonData);
+  }
 }
 
 final kaborRepositoryProvider = Provider<KaborRepository>((ref) {
-  return KaborRepositoryImpl();
+  return KaborRepositoryImpl(
+    storage: ref.watch(kcaborStorageProvider),
+  );
 });

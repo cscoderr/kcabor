@@ -12,7 +12,7 @@ class VerifyEmailViewModel extends StateNotifier<AsyncValue<BaseModel>> {
     required String otp,
   }) async {
     state = const AsyncLoading();
-    final result = await ref.read(customerAuthRepositoryProvider).verifyEmail(
+    final result = await ref.read(authRepositoryProvider).verifyEmail(
           email: email,
           otp: '${otp}56',
         );

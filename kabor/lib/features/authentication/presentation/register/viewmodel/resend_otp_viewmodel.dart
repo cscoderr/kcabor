@@ -9,11 +9,10 @@ Future<String> resendOtp(
   required String phone,
   required String countryCode,
 }) async {
-  final result =
-      await ref.read(customerAuthRepositoryProvider).verifyPhoneNumber(
-            phoneNumber: phone,
-            countryCode: '234',
-          );
+  final result = await ref.read(authRepositoryProvider).verifyPhoneNumber(
+        phoneNumber: phone,
+        countryCode: '234',
+      );
   return result.fold(
     (l) => throw l,
     (r) => r,

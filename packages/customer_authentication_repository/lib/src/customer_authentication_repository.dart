@@ -5,6 +5,7 @@ import 'package:app_models/app_models.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
+import 'package:kcabor_storage/kcabor_storage.dart';
 
 class AuthFailure {
   const AuthFailure._(this.value);
@@ -23,11 +24,14 @@ class CustomerAuthenticationRepository implements AuthenticationRepository {
   /// {@macro customer_authentication_repository}
   CustomerAuthenticationRepository({
     required String baseUrl,
+    KcaborStorage? storage,
     http.Client? httpClient,
   })  : _httpClient = httpClient ?? http.Client(),
+        _storage = storage ?? KcaborSecureStorage(),
         _baseUrl = baseUrl;
 
   final http.Client _httpClient;
+  final KcaborStorage _storage;
   final String _baseUrl;
 
   @override
@@ -50,10 +54,7 @@ class CustomerAuthenticationRepository implements AuthenticationRepository {
       final body = {
         'phone_or_email': emailOrPhone,
         'password': password,
-        'country_code': '234'
       };
-
-      print(body);
 
       final response = await _httpClient.post(
         Uri.parse('$_baseUrl/auth/login'),
@@ -62,16 +63,25 @@ class CustomerAuthenticationRepository implements AuthenticationRepository {
         },
         body: jsonEncode(body),
       );
-      print(response.body);
-      print(response.statusCode);
 
       if (response.statusCode == HttpStatus.ok) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
-
+        await _storage.write(
+          key: 'kcabor_token',
+          value: data['token'] as String,
+        );
+        final user = data['data'] as Map<String, dynamic>;
+        await _storage.write(
+          key: 'kcabor_user',
+          value: jsonEncode(user),
+        );
         return right(
-          BaseModel.fromJson(data, (json) {
-            return UserModel.fromJson(json as Map<String, dynamic>);
-          }),
+          BaseModel.fromJson(
+            data,
+            (json) {
+              return UserModel.fromJson(json as Map<String, dynamic>);
+            },
+          ),
         );
       } else if (response.statusCode == HttpStatus.badRequest) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
@@ -342,7 +352,6 @@ class CustomerAuthenticationRepository implements AuthenticationRepository {
         'password': password,
         'ref_code': refCode,
       };
-      print(body);
 
       final response = await _httpClient.post(
         Uri.parse('$_baseUrl/auth/sign-up'),
@@ -351,10 +360,19 @@ class CustomerAuthenticationRepository implements AuthenticationRepository {
         },
         body: jsonEncode(body),
       );
-      print(response.body);
 
       if (response.statusCode == HttpStatus.ok) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
+
+        await _storage.write(
+          key: 'kcabor_token',
+          value: data['token'] as String,
+        );
+        final user = data['data'] as Map<String, dynamic>;
+        await _storage.write(
+          key: 'kcabor_user',
+          value: jsonEncode(user),
+        );
 
         return right(
           BaseModel.fromJson(data, (json) {

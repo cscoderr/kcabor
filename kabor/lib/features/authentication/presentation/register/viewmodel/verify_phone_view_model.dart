@@ -6,14 +6,15 @@ class VerifyPhoneViewModel extends StateNotifier<AsyncValue<String>> {
 
   final Ref ref;
 
-  Future<void> verifyPhone(
-      {required String phone, required String countryCode}) async {
+  Future<void> verifyPhone({
+    required String phone,
+    required String countryCode,
+  }) async {
     state = const AsyncLoading();
-    final result =
-        await ref.read(customerAuthRepositoryProvider).verifyPhoneNumber(
-              phoneNumber: phone,
-              countryCode: countryCode,
-            );
+    final result = await ref.read(authRepositoryProvider).verifyPhoneNumber(
+          phoneNumber: phone,
+          countryCode: countryCode,
+        );
     result.fold(
       (l) => state = AsyncError(l, StackTrace.current),
       (r) => state = AsyncData(r),

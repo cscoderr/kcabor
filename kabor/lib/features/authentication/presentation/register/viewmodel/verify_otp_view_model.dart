@@ -12,7 +12,7 @@ class VerifyOtpViewModel extends StateNotifier<AsyncValue<String>> {
     required String countryCode,
   }) async {
     state = const AsyncLoading();
-    final result = await ref.read(customerAuthRepositoryProvider).verifyOtp(
+    final result = await ref.read(authRepositoryProvider).verifyOtp(
           otp: '${otp}56',
           phoneNumber: phone,
           countryCode: countryCode,
