@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:kabor/core/configs/app_extensions.dart';
 import 'package:kabor/core/widgets/src/app_food_card_list.dart';
-import 'package:kabor/features/home/presentation/widgets/restaurant_category_list.dart';
+import 'package:kabor/features/food_category/food_category.dart';
 
 class FoodTab extends StatelessWidget {
   const FoodTab({
@@ -17,7 +17,7 @@ class FoodTab extends StatelessWidget {
         children: [
           const SizedBox(
             height: 100,
-            child: RestaurantCategoryList(),
+            child: FoodCategoryPage(),
           ),
           const Gap(10),
           Text(
