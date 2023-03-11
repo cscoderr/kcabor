@@ -27,16 +27,16 @@ class CategoryTile extends StatelessWidget {
           CircleAvatar(
             radius: 30,
             backgroundColor: const Color(0xFFFFCD99),
-            child: Image.asset(image),
+            child: Image.asset(AppImages.drink),
           ),
           const Gap(10),
           Expanded(
-            child: Text(text),
+            child: Text(text.toLowerCase().capitalizeFirst),
           ),
           if (direction == Axis.horizontal && hasClose)
             Text(
               'Closed',
-              style: context.$style.bodyText1!.copyWith(
+              style: context.$style.bodyLarge!.copyWith(
                 color: AppColors.errorColor,
               ),
             ),
