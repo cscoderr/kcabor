@@ -1,3 +1,4 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
@@ -5,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:kabor/app/app.dart';
 import 'package:kabor/core/core.dart';
 import 'package:kabor/features/address/address.dart';
 import 'package:kabor/features/home/home.dart';
@@ -40,6 +42,7 @@ class HomePage extends HookConsumerWidget {
     final currentTab = useState(0);
     final locationData = ref.watch(currentLocationDataProvider);
     final isArtisan = useState(false);
+    final user = ref.watch(appVMProvider.select((value) => value.user));
     return Scaffold(
       key: scaffoldKey.value,
       drawer: const AppDrawer(),
@@ -69,6 +72,7 @@ class HomePage extends HookConsumerWidget {
             ),
           _buildTopWidget(
             context,
+            user: user,
             scaffoldKey: scaffoldKey.value,
             tabs: tabs,
             currentTab: currentTab,
@@ -99,6 +103,7 @@ class HomePage extends HookConsumerWidget {
 
   Widget _buildTopWidget(
     BuildContext context, {
+    required UserModel user,
     required GlobalKey<ScaffoldState> scaffoldKey,
     required List<HomeAppTabItem> tabs,
     required ValueNotifier<int> currentTab,
@@ -136,17 +141,17 @@ class HomePage extends HookConsumerWidget {
               const Gap(10),
               if (currentTab.value != 1)
                 RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     text: 'Welcome ',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                     ),
                     children: [
                       TextSpan(
-                        text: 'Tommy',
-                        style: TextStyle(
+                        text: '${user.fName}',
+                        style: const TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 20,
                           fontWeight: FontWeight.w600,

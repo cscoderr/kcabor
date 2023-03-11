@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/core/configs/app_extensions.dart';
 import 'package:kabor/core/widgets/src/app_food_card_list.dart';
 import 'package:kabor/features/food_category/food_category.dart';
 
-class FoodTab extends StatelessWidget {
+class FoodTab extends ConsumerWidget {
   const FoodTab({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
