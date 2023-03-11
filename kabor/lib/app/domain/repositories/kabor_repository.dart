@@ -9,7 +9,7 @@ enum AuthStatus {
 
 abstract class KaborRepository {
   Stream<AuthStatus> get authStatus;
-  Future<UserModel> get user;
+  Future<UserModel?> get user;
   Future<void> searchGoogleAddress(String address);
 
   Stream<List<GooglePlaceModel>> get searchAddressSream;

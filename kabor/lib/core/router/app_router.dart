@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -75,12 +73,32 @@ class AppRouter {
   String setInitialLocation(String location) => initialLocation = location;
 
   GoRouter _router() {
-    final routerGuard = RouterGuard(_ref);
+    final kcaborRepository = _ref.read(kaborRepositoryProvider);
+    // final authStatus =
+    //     _ref.watch(appVMProvider.select((value) => value.authStatus));
     return GoRouter(
       initialLocation: AppRoutePaths.landing,
       routes: routes,
-      redirect: (context, state) => routerGuard.redirect(state),
-      refreshListenable: _ref.read(routerProvider),
+      redirect: (context, state) async {
+        final authPages = [
+          AppRoutePaths.login,
+          AppRoutePaths.phoneNumber,
+          AppRoutePaths.email,
+          AppRoutePaths.referralCode,
+          AppRoutePaths.createPassword,
+          AppRoutePaths.changePassword,
+          AppRoutePaths.codeVerification,
+          AppRoutePaths.onBoarding,
+        ];
+
+        final user = await kcaborRepository.user;
+
+        if (user != null && authPages.contains(state.location)) {
+          return AppRoutePaths.authWelcome;
+        }
+        return null;
+      },
+      refreshListenable: AppRouterRefreshStream(kcaborRepository.authStatus),
     );
   }
 
@@ -794,30 +812,4 @@ class AppRouter {
       ],
     ),
   ];
-}
-
-class RouterGuard extends ChangeNotifier {
-  RouterGuard(this.ref) {
-    ref.listenManual(
-      appVMProvider,
-      (_, __) => notifyListeners(),
-    );
-  }
-
-  final WidgetRef ref;
-
-  FutureOr<String?> redirect(GoRouterState state) {
-    final authStatus =
-        ref.watch(appVMProvider.select((value) => value.authStatus));
-
-    final isLoginPage = state.location == AppRoutes.login;
-    print(authStatus);
-
-    if (authStatus == AuthStatus.unauthenticated) {
-      return isLoginPage ? null : AppRoutePaths.login;
-    } else if (authStatus == AuthStatus.authenticated) {
-      return AppRoutePaths.authWelcome;
-    }
-    return null;
-  }
 }

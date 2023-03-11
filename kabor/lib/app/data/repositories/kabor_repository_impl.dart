@@ -91,9 +91,10 @@ class KaborRepositoryImpl implements KaborRepository {
   }
 
   @override
-  Future<UserModel> get user async {
+  Future<UserModel?> get user async {
     final user = await storage.read('kcabor_user');
-    final jsonData = jsonDecode(user!) as Map<String, dynamic>;
+    if (user == null) return null;
+    final jsonData = jsonDecode(user) as Map<String, dynamic>;
     return UserModel.fromJson(jsonData);
   }
 }
