@@ -9,10 +9,12 @@ class AppFoodCard extends HookConsumerWidget {
     super.key,
     this.width = 230,
     this.onTap,
+    required this.image,
   });
 
   final double width;
   final VoidCallback? onTap;
+  final String image;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
@@ -37,8 +39,8 @@ class AppFoodCard extends HookConsumerWidget {
               width: width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: AssetImage(AppImages.food1),
+                image: DecorationImage(
+                  image: NetworkImage(image),
                   fit: BoxFit.cover,
                 ),
               ),

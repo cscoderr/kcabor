@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/app/app.dart';
 import 'package:kabor/core/core.dart';
+import 'package:kabor/features/address/address.dart';
 
 class AuthWelcomePage extends ConsumerWidget {
   const AuthWelcomePage({super.key});
@@ -12,6 +13,10 @@ class AuthWelcomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(appVMProvider.select((value) => value.user));
+    final locationData = ref.watch(currentLocationProvider);
+    final zone = ref.watch(
+      getZoneIdProvider(locationData),
+    );
     return Scaffold(
       body: SafeArea(
         child: Padding(

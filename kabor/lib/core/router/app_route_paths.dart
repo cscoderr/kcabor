@@ -19,7 +19,7 @@ class AppRoutePaths {
   static const String liveLocation = 'live-location';
   static const String addAddress = 'add-address';
   static const String searchRestaurant = 'search-restaurant';
-  static const String restaurant = 'restaurant/:category';
+  static const String restaurant = 'restaurant';
   static const String restaurantDetails = 'restaurant-details';
   static const String reward = 'reward';
   static const String categories = 'categories';

@@ -5,6 +5,8 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:google_place/google_place.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/app/app.dart';
+import 'package:kabor/app/data/remote/kcabor_api_client.dart';
+import 'package:kabor/core/core.dart';
 import 'package:kcabor_storage/kcabor_storage.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -18,10 +20,14 @@ class SearchException implements Exception {
   }
 }
 
-class KaborRepositoryImpl implements KaborRepository {
-  KaborRepositoryImpl({required this.storage});
+class KcaborRepositoryImpl implements KcaborRepository {
+  KcaborRepositoryImpl({
+    required this.storage,
+    required KcaborApiClient kcaborApiClient,
+  }) : _kcaborApiClient = kcaborApiClient;
 
   final KcaborStorage storage;
+  final KcaborApiClient _kcaborApiClient;
 
   final googlePlace = GooglePlace(
     'AIzaSyAZ8qO-8-ZBW3TzNzBfhUCBNxpU8-EX9ss',
@@ -97,10 +103,24 @@ class KaborRepositoryImpl implements KaborRepository {
     final jsonData = jsonDecode(user) as Map<String, dynamic>;
     return UserModel.fromJson(jsonData);
   }
+
+  @override
+  Future<ZoneModel> getZoneId({
+    required double latitude,
+    required double longitude,
+  }) async {
+    final response = await _kcaborApiClient.getZoneId(
+      latitude: latitude,
+      longitude: longitude,
+    );
+    await storage.write(key: 'kcabor_zone_id', value: '${response.id}');
+    return response;
+  }
 }
 
-final kaborRepositoryProvider = Provider<KaborRepository>((ref) {
-  return KaborRepositoryImpl(
+final kaborRepositoryProvider = Provider<KcaborRepository>((ref) {
+  return KcaborRepositoryImpl(
     storage: ref.watch(kcaborStorageProvider),
+    kcaborApiClient: ref.watch(kcaborApiClientProvider),
   );
 });

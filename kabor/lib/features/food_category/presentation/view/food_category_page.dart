@@ -23,8 +23,9 @@ class FoodCategoryPage extends ConsumerWidget {
                 text: category.name!,
                 onTap: () => context.pushNamed(
                   AppRoutes.restaurant,
-                  params: {
-                    'category': category.name!,
+                  queryParams: {
+                    'title': category.name!,
+                    'categoryId': category.id.toString(),
                   },
                 ),
               );

@@ -1151,6 +1151,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_infinite_scroll:
+    dependency: "direct main"
+    description:
+      name: smooth_infinite_scroll
+      sha256: adac1c382bb7dae348d6bd4490303908ac30e58d9ca081af129817124dff089c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   smooth_page_indicator:
     dependency: "direct main"
     description:

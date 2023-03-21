@@ -12,7 +12,8 @@ class AppFoodCardList extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          return const AppFoodCard();
+          // return const AppFoodCard();
+          return const SizedBox();
         },
         separatorBuilder: (context, index) => const Gap(20),
         itemCount: 10,

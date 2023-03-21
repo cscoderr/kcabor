@@ -66,7 +66,7 @@ class _RestaurantDetailsPageState extends State<RestaurantDetailsPage> {
                   children: [
                     Text(
                       'Poached - GRA, Ilorin',
-                      style: context.$style.headline5?.copyWith(
+                      style: context.$style.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w900,
                       ),
                     ),

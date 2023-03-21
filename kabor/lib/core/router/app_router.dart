@@ -377,7 +377,10 @@ class AppRouter {
           path: AppRoutePaths.restaurant,
           name: AppRoutes.restaurant,
           builder: (BuildContext context, GoRouterState state) {
-            return RestaurantPage(title: state.params['category'] as String);
+            return RestaurantPage(
+              title: state.queryParams['title'] as String,
+              categoryId: state.queryParams['categoryId'] as String,
+            );
           },
           routes: [
             GoRoute(

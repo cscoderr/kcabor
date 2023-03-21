@@ -30,7 +30,9 @@ class MainInterceptor extends InterceptorContract {
   @override
   Future<RequestData> interceptRequest({required RequestData data}) async {
     final token = await supacelebStorage.read('kcabor_token');
+    final zoneId = await supacelebStorage.read('kcabor_zone_id');
     data.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+    data.headers['zoneId'] = '$zoneId';
     return data;
   }
 
