@@ -58,7 +58,7 @@ dependencies:
   riverpod_annotation: ^1.2.1
   another_flushbar: ^1.12.29
   http_interceptor: ^1.0.2
-  smooth_infinite_scroll: ^0.1.1
+  smooth_infinite_scroll: ^0.1.2
 
 dev_dependencies:
   bloc_test: ^9.1.0

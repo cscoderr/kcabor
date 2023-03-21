@@ -5,30 +5,30 @@ import 'package:kabor/features/food_category/food_category.dart';
 typedef GetFoodCategoryResponse
     = AsyncValue<PaginatedResponse<List<ProductResponse>>>;
 
-class GetFoodByCategoryViewModel
-    extends StateNotifier<GetFoodCategoryResponse> {
-  GetFoodByCategoryViewModel(this.ref) : super(const AsyncValue.loading());
+class GetFoodByCategoryViewModel extends PaginatedProvider<ProductResponse> {
+  GetFoodByCategoryViewModel(super.ref);
 
-  final Ref ref;
-
-  Future<void> getFoodByCategory({
-    required int categoryId,
+  Future<void> getFoodByCategory(
+    int categoryId, {
     int? offset,
-    int? limit,
-  }) async {
-    state = const AsyncValue.loading();
-    // try {
-    final response = await ref.read(getFoodCategoryUsecaseProvider).call(
-          GetFoodByCategoryParams(
-            categoryId: categoryId,
-            offset: offset,
-            limit: limit ?? 20,
+    int? totalSize,
+    bool hasLoader = true,
+  }) {
+    final newOffset = super.getOffset(
+      offset: offset,
+      totalSize: totalSize,
+    );
+    return super.onRequest(
+      () => ref.read(getFoodCategoryUsecaseProvider).call(
+            GetFoodByCategoryParams(
+              categoryId: categoryId,
+              offset: newOffset,
+              limit: AppConstants.appLimit,
+            ),
           ),
-        );
-    state = AsyncValue.data(response);
-    // } catch (e) {
-    //   state = AsyncValue.error(e, StackTrace.current);
-    // }
+      offset: newOffset,
+      hasLoader: hasLoader,
+    );
   }
 }
 

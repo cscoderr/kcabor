@@ -1155,10 +1155,10 @@ packages:
     dependency: "direct main"
     description:
       name: smooth_infinite_scroll
-      sha256: adac1c382bb7dae348d6bd4490303908ac30e58d9ca081af129817124dff089c
+      sha256: "79c6b596212c37631ddbfadf293d313c5d66dce8c6141e3a6e3e240d9e71d127"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.1"
+    version: "0.1.2"
   smooth_page_indicator:
     dependency: "direct main"
     description:

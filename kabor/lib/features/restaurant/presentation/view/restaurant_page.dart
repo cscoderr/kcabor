@@ -26,8 +26,7 @@ class RestaurantPage extends HookConsumerWidget {
       () {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           ref.read(getFoodCategoryVMProvider.notifier).getFoodByCategory(
-                categoryId: int.parse(categoryId),
-                offset: 1,
+                int.parse(categoryId),
               );
         });
         return null;
@@ -57,10 +56,28 @@ class RestaurantPage extends HookConsumerWidget {
                     final response = data.data;
                     return SmoothInfiniteScroll<ProductResponse>(
                       items: response ?? [],
+                      hasError: ref
+                          .watch(getFoodCategoryVMProvider.notifier)
+                          .hasError,
+                      hasMore: !ref
+                          .watch(getFoodCategoryVMProvider.notifier)
+                          .hasReachedMax,
+                      loader: const KcaborProgressIndicator(),
+                      onLoadMore: () => ref
+                          .read(getFoodCategoryVMProvider.notifier)
+                          .getFoodByCategory(
+                            int.parse(categoryId),
+                            hasLoader: false,
+                            offset: data.offset,
+                            totalSize: data.totalSize,
+                          ),
                       itemBuilder: (context, index) {
                         final item = response![index];
                         return AppFoodCard(
-                          image: '${AppConstants.baseUrl}/${item.image}',
+                          name: '${item.name}',
+                          image: '${item.image}',
+                          restaurantName: '${item.restaurantName}',
+                          rating: '${item.avgRating}',
                           onTap: () {
                             context.pushNamed(
                               AppRoutes.restaurantDetails,
@@ -78,7 +95,7 @@ class RestaurantPage extends HookConsumerWidget {
                     child: Text(error.toString()),
                   ),
                   loading: () => const Center(
-                    child: CircularProgressIndicator(),
+                    child: KcaborProgressIndicator(),
                   ),
                 ),
               )
