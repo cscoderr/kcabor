@@ -6,7 +6,7 @@ part of 'resend_otp_viewmodel.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$resendOtpHash() => r'b4852f4cb8e3d1671743a539da40f00fbc8fa02c';
+String _$resendOtpHash() => r'40d4be2a255147e671a79e2c61808e1adeb63a74';
 
 /// Copied from Dart SDK
 class _SystemHash {

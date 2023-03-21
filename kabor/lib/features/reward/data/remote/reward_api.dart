@@ -1,8 +1,5 @@
-abstract class RewardApi {
-
-}
+abstract class RewardApi {}
 
 class RewardApiImpl extends RewardApi {
   RewardApiImpl();
-
 }

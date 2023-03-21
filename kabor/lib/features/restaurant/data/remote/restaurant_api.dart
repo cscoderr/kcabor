@@ -1,8 +1,5 @@
-abstract class RestaurantApi {
-
-}
+abstract class RestaurantApi {}
 
 class RestaurantApiImpl extends RestaurantApi {
   RestaurantApiImpl();
-
 }

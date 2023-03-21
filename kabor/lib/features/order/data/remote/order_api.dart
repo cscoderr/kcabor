@@ -1,8 +1,5 @@
-abstract class OrderApi {
-
-}
+abstract class OrderApi {}
 
 class OrderApiImpl extends OrderApi {
   OrderApiImpl();
-
 }

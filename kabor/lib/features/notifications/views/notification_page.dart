@@ -14,18 +14,16 @@ class Notificaition extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Mark all as read',
-                    softWrap: true,
-                    style: context.$style.titleMedium,
-                  ),
+            Align(
+              alignment: Alignment.topRight,
+              child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  'Mark all as read',
+                  softWrap: true,
+                  style: context.$style.titleMedium,
                 ),
-              ],
+              ),
             ),
             const Gap(10),
             const Expanded(

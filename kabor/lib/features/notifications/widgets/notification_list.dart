@@ -12,7 +12,6 @@ class NotificationCard extends StatelessWidget {
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          height: 74,
           width: MediaQuery.of(context).size.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
@@ -29,14 +28,15 @@ class NotificationCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Payment Request ',
+                        'Payment Request',
                         style: context.$style.titleMedium!.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Gap(100),
+                      Gap(MediaQuery.of(context).size.width * .22),
                       Text(
                         '2mins ago',
                         style: context.$style.bodySmall,

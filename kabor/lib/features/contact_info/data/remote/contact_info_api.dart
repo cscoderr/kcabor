@@ -1,8 +1,5 @@
-abstract class ContactInfoApi {
-
-}
+abstract class ContactInfoApi {}
 
 class ContactInfoApiImpl extends ContactInfoApi {
   ContactInfoApiImpl();
-
 }
