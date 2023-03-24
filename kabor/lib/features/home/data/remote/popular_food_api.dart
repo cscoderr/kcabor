@@ -15,7 +15,7 @@ final popularFoodApiProvider = Provider<PopularFoodApiClient>((ref) {
 });
 
 abstract class PopularFoodApiClient {
-  Future<PaginatedResponse<List<ProductResponse>>> getPopularFoodCategory({
+  Future<PaginatedResponse<List<ProductResponse>>> getPopularFood({
     int? offset,
     int? limit,
   });
@@ -29,7 +29,7 @@ class PopularFoodApiClientImpl extends PopularFoodApiClient {
   final InterceptedHttp _httpClient;
 
   @override
-  Future<PaginatedResponse<List<ProductResponse>>> getPopularFoodCategory({
+  Future<PaginatedResponse<List<ProductResponse>>> getPopularFood({
     int? offset,
     int? limit,
   }) async {

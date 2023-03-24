@@ -22,7 +22,7 @@ class PopularFoodRepositoryImpl extends PopularFoodRepository {
     int? offset,
     int? limit,
   }) async {
-    final response = await _apiClient.getPopularFoodCategory(
+    final response = await _apiClient.getPopularFood(
       offset: offset,
       limit: limit,
     );
