@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:kabor/core/core.dart';
-import 'package:kabor/features/food_category/food_category.dart';
+import 'package:kabor/core/models/category/category.dart';
 
 final foodCategoryApiProvider = Provider<FoodCategoryApiClient>((ref) {
   return FoodCategoryApiClientImpl(httpClient: ref.watch(mainhttpProvider));
@@ -12,7 +12,11 @@ final foodCategoryApiProvider = Provider<FoodCategoryApiClient>((ref) {
 
 abstract class FoodCategoryApiClient {
   Future<List<Category>> getCategories();
-  Future<void> getCategoryDetails();
+  Future<PaginatedResponse<List<ProductResponse>>> getFoodByCategory({
+    required int categoryId,
+    int? offset,
+    int? limit,
+  });
 }
 
 class FoodCategoryApiClientImpl extends FoodCategoryApiClient {
@@ -38,7 +42,34 @@ class FoodCategoryApiClientImpl extends FoodCategoryApiClient {
   }
 
   @override
-  Future<void> getCategoryDetails() {
-    throw UnimplementedError();
+  Future<PaginatedResponse<List<ProductResponse>>> getFoodByCategory({
+    required int categoryId,
+    int? offset,
+    int? limit,
+  }) async {
+    final response = await _httpClient.get(
+      Uri.parse('${AppConstants.baseUrl}/food/items/$categoryId').replace(
+        queryParameters: {
+          if (offset != null) 'offset': offset.toString(),
+          if (offset != null) 'limit': limit.toString(),
+        },
+      ),
+    );
+
+    if (response.statusCode == HttpStatus.ok) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      return PaginatedResponse.fromJson(
+        data,
+        (json) {
+          print(json);
+          return (json as List)
+              .map(
+                (e) => ProductResponse.fromJson(e as Map<String, dynamic>),
+              )
+              .toList();
+        },
+      );
+    }
+    throw Exception('Error fetching food by category');
   }
 }

@@ -1,2 +1,2 @@
 export 'models/models.dart';
-export 'repositories/kabor_repository_impl.dart';
+export 'repositories/kcabor_repository_impl.dart';

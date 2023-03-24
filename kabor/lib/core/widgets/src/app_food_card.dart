@@ -9,10 +9,19 @@ class AppFoodCard extends HookConsumerWidget {
     super.key,
     this.width = 230,
     this.onTap,
+    required this.name,
+    required this.image,
+    required this.restaurantName,
+    required this.rating,
   });
 
   final double width;
   final VoidCallback? onTap;
+  final String image;
+  final String name;
+  final String restaurantName;
+  final String rating;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
@@ -37,8 +46,8 @@ class AppFoodCard extends HookConsumerWidget {
               width: width,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                image: const DecorationImage(
-                  image: AssetImage(AppImages.food1),
+                image: DecorationImage(
+                  image: NetworkImage(image),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -50,7 +59,7 @@ class AppFoodCard extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Jollof Hut',
+                    name,
                     style: context.$style.titleLarge!.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -64,7 +73,7 @@ class AppFoodCard extends HookConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        '4.5 (2.5k).Local Dishes',
+                        '$rating (2.5k)-$restaurantName',
                         style: context.$style.titleSmall!.copyWith(
                           color: AppColors.dark2,
                         ),
