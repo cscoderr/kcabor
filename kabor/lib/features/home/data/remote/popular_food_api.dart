@@ -33,16 +33,16 @@ class PopularFoodApiClientImpl extends PopularFoodApiClient {
     int? offset,
     int? limit,
   }) async {
-    final response = await _httpClient.get(
-      Uri.parse('${AppConstants.baseUrl}/food/popular').replace(
-        queryParameters: {
-          if (offset != null) 'offset': offset.toString(),
-          if (offset != null) 'limit': limit.toString(),
-        },
-      ),
-    );
-
     try {
+      final response = await _httpClient.get(
+        Uri.parse('${AppConstants.baseUrl}/food/popular').replace(
+          queryParameters: {
+            if (offset != null) 'limit': limit.toString(),
+            if (offset != null) 'offset': offset.toString(),
+          },
+        ),
+      );
+      print(response.body);
       if (response.statusCode == HttpStatus.ok) {
         final data = jsonDecode(response.body) as Map<String, dynamic>;
         return PaginatedResponse.fromJson(
@@ -56,9 +56,10 @@ class PopularFoodApiClientImpl extends PopularFoodApiClient {
           },
         );
       }
+      throw Exception('Error fetching popular foods');
     } catch (e) {
       print(e);
+      throw Exception('Error fetching popular foods');
     }
-    throw Exception('Error fetching popular foods');
   }
 }
