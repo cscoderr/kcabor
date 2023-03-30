@@ -29,7 +29,10 @@ class EditProfileProvider extends StateNotifier<EditProfileState> {
             image: state.image,
           ),
         );
-    state = state.copyWith(status: EditProfileStatus.success);
+    state = state.copyWith(
+      status: EditProfileStatus.success,
+      successMessage: result.message,
+    );
   }
 }
 
