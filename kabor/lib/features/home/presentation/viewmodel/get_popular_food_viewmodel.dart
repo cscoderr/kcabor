@@ -12,7 +12,7 @@ class GetPopularFoodViewModel extends PaginatedProvider<ProductResponse> {
   GetPopularFoodViewModel(super.ref);
 
   Future<void> getPopularFood({
-    int? offset,
+    String? offset,
     int? totalSize,
     bool hasLoader = true,
   }) {

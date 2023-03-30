@@ -22,8 +22,8 @@ class PaginatedResponse<T> {
 
   PaginatedResponse<T> copyWith({
     T? data,
-    int? offset,
-    int? limit,
+    String? offset,
+    String? limit,
     int? totalSize,
   }) {
     return PaginatedResponse(
@@ -35,7 +35,7 @@ class PaginatedResponse<T> {
   }
 
   final int? totalSize;
-  final int? limit;
-  final int? offset;
+  final String? limit;
+  final String? offset;
   final T? data;
 }

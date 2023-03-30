@@ -51,7 +51,7 @@ class ProductResponse {
   final List<dynamic>? addOns;
   final List<dynamic>? attributes;
   final List<dynamic>? choiceOptions;
-  final int? price;
+  final num? price;
   final double? tax;
   final String? taxType;
   final int? discount;

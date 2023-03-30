@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -32,7 +33,8 @@ class MainInterceptor extends InterceptorContract {
     final token = await supacelebStorage.read('kcabor_token');
     final zoneId = await supacelebStorage.read('kcabor_zone_id');
     data.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-    data.headers['zoneId'] = '1';
+    data.headers['zoneId'] = jsonEncode(['1']);
+    print(data.headers);
     return data;
   }
 

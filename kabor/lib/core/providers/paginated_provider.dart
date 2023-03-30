@@ -12,11 +12,12 @@ abstract class PaginatedProvider<T extends Object>
   String errorMessage = '';
 
   int getOffset({
-    int? offset,
+    String? offset,
     int? totalSize,
   }) {
     final pageSize = ((totalSize ?? 1) / AppConstants.appLimit).ceil();
-    final newOffset = (offset ?? 1) < pageSize ? (offset ?? 1) + 1 : 1;
+    final offset0 = int.tryParse(offset ?? '');
+    final newOffset = (offset0 ?? 1) < pageSize ? (offset0 ?? 1) + 1 : 1;
     return newOffset;
   }
 
@@ -29,23 +30,23 @@ abstract class PaginatedProvider<T extends Object>
     if (hasLoader) {
       state = const AsyncValue.loading();
     }
-    try {
-      final response = await request();
-      final currentData = state.asData?.value.data ?? [];
-      final data = response.data ?? [];
-      final newData = [...currentData, ...data];
-      final newResponse = response.copyWith(
-        data: newData,
-      );
-      hasReachedMax = data.length < AppConstants.appLimit;
-      state = AsyncValue.data(newResponse);
-    } catch (e) {
-      if (hasLoader) {
-        state = AsyncValue.error(e, StackTrace.current);
-      } else {
-        hasError = true;
-        errorMessage = e.toString();
-      }
-    }
+    // try {
+    final response = await request();
+    final currentData = state.asData?.value.data ?? [];
+    final data = response.data ?? [];
+    final newData = [...currentData, ...data];
+    final newResponse = response.copyWith(
+      data: newData,
+    );
+    hasReachedMax = data.length < AppConstants.appLimit;
+    state = AsyncValue.data(newResponse);
+    // } catch (e) {
+    //   if (hasLoader) {
+    //     state = AsyncValue.error(e, StackTrace.current);
+    //   } else {
+    //     hasError = true;
+    //     errorMessage = e.toString();
+    //   }
+    // }
   }
 }

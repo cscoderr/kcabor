@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kabor/core/configs/app_extensions.dart';
-import 'package:kabor/core/widgets/src/app_food_card_list.dart';
+import 'package:kabor/core/core.dart';
 import 'package:kabor/features/food_category/food_category.dart';
+import 'package:kabor/features/home/presentation/viewmodel/get_popular_food_viewmodel.dart';
 
-class FoodTab extends ConsumerWidget {
+class FoodTab extends HookConsumerWidget {
   const FoodTab({
     super.key,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final getPopularFood = ref.watch(getPopularFoodVMProvider);
+
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          ref.read(getPopularFoodVMProvider.notifier).getPopularFood();
+        });
+        return null;
+      },
+      [],
+    );
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +42,31 @@ class FoodTab extends ConsumerWidget {
             ),
           ),
           const Gap(20),
-          const AppFoodCardList(),
+          getPopularFood.when(
+            data: (data) {
+              return AppFoodCardList(
+                response: data,
+                hasError: ref.watch(getPopularFoodVMProvider.notifier).hasError,
+                hasReachedMax: ref
+                    .watch(
+                      getPopularFoodVMProvider.notifier,
+                    )
+                    .hasReachedMax,
+                onLoadMore: () =>
+                    ref.read(getPopularFoodVMProvider.notifier).getPopularFood(
+                          hasLoader: false,
+                          offset: data.offset,
+                          totalSize: data.totalSize,
+                        ),
+              );
+            },
+            error: (error, stack) => Center(
+              child: Text(error.toString()),
+            ),
+            loading: () => const Center(
+              child: KcaborProgressIndicator(),
+            ),
+          ),
           const Gap(10),
           Text(
             'Popular Near You',
@@ -39,7 +76,32 @@ class FoodTab extends ConsumerWidget {
             ),
           ),
           const Gap(10),
-          const AppFoodCardList(),
+          getPopularFood.when(
+            data: (data) {
+              return AppFoodCardList(
+                response: data,
+                hasError: ref.watch(getPopularFoodVMProvider.notifier).hasError,
+                hasReachedMax: ref
+                    .watch(
+                      getPopularFoodVMProvider.notifier,
+                    )
+                    .hasReachedMax,
+                onLoadMore: () =>
+                    ref.read(getPopularFoodVMProvider.notifier).getPopularFood(
+                          hasLoader: false,
+                          offset: data.offset,
+                          totalSize: data.totalSize,
+                        ),
+              );
+            },
+            error: (error, stack) => Center(
+              child: Text(error.toString()),
+            ),
+            loading: () => const Center(
+              child: KcaborProgressIndicator(),
+            ),
+          ),
+          const Gap(20),
         ],
       ),
     );

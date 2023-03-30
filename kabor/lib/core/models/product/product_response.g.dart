@@ -20,7 +20,7 @@ ProductResponse _$ProductResponseFromJson(Map<String, dynamic> json) =>
       addOns: json['add_ons'] as List<dynamic>?,
       attributes: json['attributes'] as List<dynamic>?,
       choiceOptions: json['choice_options'] as List<dynamic>?,
-      price: json['price'] as int?,
+      price: json['price'] as num?,
       tax: (json['tax'] as num?)?.toDouble(),
       taxType: json['tax_type'] as String?,
       discount: json['discount'] as int?,

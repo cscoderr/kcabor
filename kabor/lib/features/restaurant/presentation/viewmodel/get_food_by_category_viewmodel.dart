@@ -10,7 +10,7 @@ class GetFoodByCategoryViewModel extends PaginatedProvider<ProductResponse> {
 
   Future<void> getFoodByCategory(
     int categoryId, {
-    int? offset,
+    String? offset,
     int? totalSize,
     bool hasLoader = true,
   }) {
