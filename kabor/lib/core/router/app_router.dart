@@ -535,7 +535,7 @@ class AppRouter {
               path: AppRoutePaths.editProfile,
               name: AppRoutes.editProfile,
               builder: (BuildContext context, GoRouterState state) {
-                return const EditProfilePage();
+                return EditProfilePage();
               },
             ),
           ],
