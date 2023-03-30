@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/core/core.dart';
 import 'package:kabor/features/food_category/food_category.dart';
+import 'package:kabor/features/home/presentation/viewmodel/get_hot_deals_vm.dart';
 import 'package:kabor/features/home/presentation/viewmodel/get_popular_food_viewmodel.dart';
 
 class FoodTab extends HookConsumerWidget {
@@ -14,11 +15,13 @@ class FoodTab extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final getPopularFood = ref.watch(getPopularFoodVMProvider);
+    final getHotDeals = ref.watch(getHotDealsVMProvider);
 
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           ref.read(getPopularFoodVMProvider.notifier).getPopularFood();
+          ref.read(getHotDealsVMProvider.notifier).getHotDeals();
         });
         return null;
       },
@@ -42,18 +45,18 @@ class FoodTab extends HookConsumerWidget {
             ),
           ),
           const Gap(20),
-          getPopularFood.when(
+          getHotDeals.when(
             data: (data) {
               return AppFoodCardList(
                 response: data,
-                hasError: ref.watch(getPopularFoodVMProvider.notifier).hasError,
+                hasError: ref.watch(getHotDealsVMProvider.notifier).hasError,
                 hasReachedMax: ref
                     .watch(
-                      getPopularFoodVMProvider.notifier,
+                      getHotDealsVMProvider.notifier,
                     )
                     .hasReachedMax,
                 onLoadMore: () =>
-                    ref.read(getPopularFoodVMProvider.notifier).getPopularFood(
+                    ref.read(getHotDealsVMProvider.notifier).getHotDeals(
                           hasLoader: false,
                           offset: data.offset,
                           totalSize: data.totalSize,
