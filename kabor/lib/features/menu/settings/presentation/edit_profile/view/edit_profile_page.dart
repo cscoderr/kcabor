@@ -1,29 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:kabor/app/app.dart';
 import 'package:kabor/core/core.dart';
 import 'package:kabor/features/menu/settings/presentation/edit_profile/edit_profile.dart';
-import 'package:kabor/features/menu/settings/presentation/edit_profile/provider/edit_profile_provider.dart';
 
-class EditProfilePage extends ConsumerWidget {
-  EditProfilePage({super.key});
-
-  final _nameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+class EditProfilePage extends HookConsumerWidget {
+  const EditProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.read(editProfileProvider.notifier);
-    return Scaffold(
-      appBar: const KaborAppBar(
-        title: 'Edit Profile',
-        trailing: AppEditButton(),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Form(
-          key: _formKey,
+    final state = ref.watch(editProfileProvider);
+    final user = ref.read(appVMProvider.select((value) => value.user));
+    final firstNameController = useTextEditingController(
+      text: user.fName,
+    );
+    final lastNameController = useTextEditingController(
+      text: user.lName,
+    );
+    final emailController = useTextEditingController(
+      text: user.email,
+    );
+
+    ref.listen<EditProfileState>(editProfileProvider, (_, state) {
+      if (state.status == EditProfileStatus.success) {
+        // ref.read(appVMProvider.notifier).updateUser();
+        context.successMessage(state.successMessage);
+        // Navigator.pop(context);
+
+        context.pop();
+      } else if (state.status == EditProfileStatus.error) {
+        context.errorMessage(state.errorMessage);
+      }
+    });
+
+    return KcaborLoader(
+      isLoading: state.status == EditProfileStatus.loading,
+      child: Scaffold(
+        appBar: const KaborAppBar(
+          title: 'Edit Profile',
+          trailing: AppEditButton(),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           child: Column(
             children: [
               Stack(
@@ -55,34 +77,36 @@ class EditProfilePage extends ConsumerWidget {
               const Gap(30),
               AppTextField(
                 prefixIcon: const Icon(Iconsax.user),
-                suffixIcon: const Icon(Iconsax.close_circle),
-                hintText: 'Full Name',
-                controller: _nameController,
+                hintText: 'First Name',
+                onChanged:
+                    ref.read(editProfileProvider.notifier).onFirstNameChanged,
+                controller: firstNameController,
               ),
-              const Gap(15),
+              const Gap(20),
               AppTextField(
                 prefixIcon: const Icon(Iconsax.user),
-                suffixIcon: const Icon(Iconsax.close_circle),
+                hintText: 'Last Name',
+                onChanged:
+                    ref.read(editProfileProvider.notifier).onLastNameChanged,
+                controller: lastNameController,
+              ),
+              const Gap(20),
+              AppTextField(
+                prefixIcon: const Icon(Iconsax.user),
+                onChanged:
+                    ref.read(editProfileProvider.notifier).onEmailChanged,
+                // suffixIcon: const Icon(Iconsax.close_circle),
                 hintText: 'Email',
-                controller: _nameController,
+                controller: emailController,
               ),
               const Spacer(),
               SolidButton(
                 text: 'Done',
-                onPressed: () {
-                  if (_formKey.currentState?.validate() ?? false) {
-                    ref.read(editProfileProvider.notifier).onFirstNameChanged(
-                          _nameController.text.split(' ').first.trim(),
-                        );
-                    ref.read(editProfileProvider.notifier).onLastNameChanged(
-                          _nameController.text.split(' ').last.trim(),
-                        );
-                    ref.read(editProfileProvider.notifier).onEmailChanged(
-                          '',
-                        );
-                    ref.read(editProfileProvider.notifier).updateProfile();
-                  }
-                },
+                onPressed: ref.read(editProfileProvider.notifier).isValid
+                    ? () {
+                        ref.read(editProfileProvider.notifier).updateProfile();
+                      }
+                    : null,
               ),
               const Gap(20),
             ],
