@@ -11,9 +11,13 @@ class EditProfileProvider extends StateNotifier<EditProfileState> {
   final Ref ref;
 
   bool get isValid {
+    final user = ref.read(appVMProvider.select((value) => value.user));
     return state.firstName.isNotEmpty &&
         state.lastName.isNotEmpty &&
-        state.email.isNotEmpty;
+        state.email.isNotEmpty &&
+        (user.fName != state.firstName ||
+            user.lName != state.lastName ||
+            user.email != state.email);
   }
 
   void updateData() {
