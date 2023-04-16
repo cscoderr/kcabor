@@ -11,9 +11,9 @@ PaginatedResponse<T> _$PaginatedResponseFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) =>
     PaginatedResponse<T>(
-      data: _$nullableGenericFromJson(json['products'], fromJsonT),
-      offset: json['offset'].toString(),
-      limit: json['limit'].toString(),
+      data: _$nullableGenericFromJson(json['data'], fromJsonT),
+      offset: json['offset'] as String?,
+      limit: json['limit'] as String?,
       totalSize: json['total_size'] as int?,
     );
 
@@ -25,7 +25,7 @@ Map<String, dynamic> _$PaginatedResponseToJson<T>(
       'total_size': instance.totalSize,
       'limit': instance.limit,
       'offset': instance.offset,
-      'products': _$nullableGenericToJson(instance.data, toJsonT),
+      'data': _$nullableGenericToJson(instance.data, toJsonT),
     };
 
 T? _$nullableGenericFromJson<T>(

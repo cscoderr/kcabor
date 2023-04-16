@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/core/core.dart';
 import 'package:smooth_infinite_scroll/smooth_infinite_scroll.dart';
@@ -36,7 +37,7 @@ class AppFoodCardList extends HookConsumerWidget {
             image: '${item.image}',
             restaurantName: '${item.restaurantName}',
             rating: '${item.avgRating}',
-            onTap: () {},
+            onTap: () => context.pushNamed(AppRoutes.restaurantDetails),
           );
         },
       ),

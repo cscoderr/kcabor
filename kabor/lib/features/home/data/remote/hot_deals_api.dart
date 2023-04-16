@@ -40,7 +40,6 @@ class HotDealsApiClientImpl extends HotDealsApiClient {
         },
       ),
     );
-    print(response.body);
     if (response.statusCode == HttpStatus.ok) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       return PaginatedResponse.fromJson(
