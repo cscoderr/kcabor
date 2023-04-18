@@ -58,7 +58,7 @@ class FoodTab extends HookConsumerWidget {
                 onLoadMore: () =>
                     ref.read(getHotDealsVMProvider.notifier).getHotDeals(
                           hasLoader: false,
-                          offset: data.offset,
+                          offset: data.offset.toString(),
                           totalSize: data.totalSize,
                         ),
               );
@@ -92,7 +92,7 @@ class FoodTab extends HookConsumerWidget {
                 onLoadMore: () =>
                     ref.read(getPopularFoodVMProvider.notifier).getPopularFood(
                           hasLoader: false,
-                          offset: data.offset,
+                          offset: data.offset.toString(),
                           totalSize: data.totalSize,
                         ),
               );

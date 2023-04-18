@@ -12,8 +12,8 @@ PaginatedResponse<T> _$PaginatedResponseFromJson<T>(
 ) =>
     PaginatedResponse<T>(
       data: _$nullableGenericFromJson(json['data'], fromJsonT),
-      offset: json['offset'] as String?,
-      limit: json['limit'] as String?,
+      offset: json['offset'].toString(),
+      limit: json['limit'].toString(),
       totalSize: json['total_size'] as int?,
     );
 

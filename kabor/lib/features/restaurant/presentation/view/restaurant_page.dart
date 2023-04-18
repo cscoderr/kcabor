@@ -66,7 +66,7 @@ class RestaurantPage extends HookConsumerWidget {
                           .getFoodByCategory(
                             int.parse(categoryId),
                             hasLoader: false,
-                            offset: data.offset,
+                            offset: data.offset.toString(),
                             totalSize: data.totalSize,
                           ),
                       itemBuilder: (context, index) {
