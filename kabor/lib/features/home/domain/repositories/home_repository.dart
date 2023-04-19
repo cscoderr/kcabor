@@ -1,8 +1,11 @@
-// ignore_for_file: one_member_abstracts
-
 import 'package:kabor/core/core.dart';
 
-abstract class PopularFoodRepository {
+abstract class HomeRepository {
+  Future<PaginatedResponse<List<ProductResponse>>> getHotDeals({
+    int? offset,
+    int? limit,
+  });
+
   Future<PaginatedResponse<List<ProductResponse>>> getPopularFood({
     int? offset,
     int? limit,

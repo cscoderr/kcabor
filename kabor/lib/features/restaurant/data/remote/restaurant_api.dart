@@ -11,6 +11,7 @@ final restaurantApiProvider = Provider<RestaurantApiClient>((ref) {
 
 abstract class RestaurantApiClient {
   Future<RestaurantResponse> getRestaurantDetails(String restaurantId);
+  Future<void> restaurantsByCategory(String categoryId);
 }
 
 class RestaurantApiClientImpl extends RestaurantApiClient {
@@ -26,11 +27,19 @@ class RestaurantApiClientImpl extends RestaurantApiClient {
       '${AppConstants.baseUrl}/restaurant/details/$restaurantId',
     );
 
+    print(response.body);
+
     if (response.statusCode == HttpStatus.ok) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       return RestaurantResponse.fromJson(data);
     } else {
       throw Exception('');
     }
+  }
+
+  @override
+  Future<void> restaurantsByCategory(String categoryId) {
+    // TODO: implement restaurantsByCategory
+    throw UnimplementedError();
   }
 }

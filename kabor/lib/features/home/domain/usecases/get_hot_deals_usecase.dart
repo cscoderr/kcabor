@@ -2,19 +2,19 @@ import 'package:equatable/equatable.dart';
 import 'package:kabor/core/models/paginated_response/paginated_response.dart';
 import 'package:kabor/core/models/product/product_response.dart';
 import 'package:kabor/core/utils/usecases.dart';
-import 'package:kabor/features/home/data/repository/hot_deals_repository_impl.dart';
-import 'package:kabor/features/home/domain/repositories/hot_deals_repository.dart';
+import 'package:kabor/features/home/data/data.dart';
+import 'package:kabor/features/home/domain/domain.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 final getHotDealsUsecaseProvider = Provider<GetHotDealsUsecase>((ref) {
-  return GetHotDealsUsecase(ref.watch(hotDealsProvider));
+  return GetHotDealsUsecase(ref.watch(homeRepositoryProvider));
 });
 
 class GetHotDealsUsecase extends Usecases<
     PaginatedResponse<List<ProductResponse>>, GetHotDealsParams> {
   GetHotDealsUsecase(this.repository);
 
-  final HotDealsRepository repository;
+  final HomeRepository repository;
 
   @override
   Future<PaginatedResponse<List<ProductResponse>>> call(
