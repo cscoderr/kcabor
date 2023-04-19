@@ -47,6 +47,9 @@ class FoodTab extends HookConsumerWidget {
           const Gap(20),
           getHotDeals.when(
             data: (data) {
+              print('=======');
+              print(data.data?.length);
+              print('=======');
               return AppFoodCardList(
                 response: data,
                 hasError: ref.watch(getHotDealsVMProvider.notifier).hasError,
