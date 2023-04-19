@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'paginated_response.g.dart';
+part 'paginated_response.t.dart';
 
 @JsonSerializable(
   fieldRename: FieldRename.snake,
