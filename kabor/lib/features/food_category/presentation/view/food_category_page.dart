@@ -11,38 +11,33 @@ class FoodCategoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final categories = ref.watch(getCategoryVMProvider);
-    return Scaffold(
-      body: categories.when(
-        data: (data) {
-          return ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              final category = data[index];
-              return CategoryTile(
-                image: category.image!,
-                text: category.name!,
-                onTap: () => context.pushNamed(
-                  AppRoutes.restaurant,
-                  queryParams: {
-                    'title': category.name,
-                    'categoryId': category.id.toString(),
-                  },
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const Gap(20);
-            },
-            itemCount: data.length,
-            shrinkWrap: true,
-          );
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
-        error: (error, stack) => const Center(
-          child: Text('Error'),
-        ),
+    return categories.when(
+      data: (data) {
+        return ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            final category = data[index];
+            return CategoryTile(
+              image: category.image!,
+              text: category.name!,
+              onTap: () => context.pushNamed(
+                AppRoutes.restaurant,
+                queryParams: {
+                  'title': category.name,
+                  'categoryId': category.id.toString(),
+                },
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const Gap(20);
+          },
+          itemCount: data.length,
+        );
+      },
+      loading: FoodCategoryListShimmer.new,
+      error: (error, stack) => const Center(
+        child: Text('Error'),
       ),
     );
   }
