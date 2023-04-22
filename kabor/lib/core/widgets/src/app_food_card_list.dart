@@ -33,12 +33,18 @@ class AppFoodCardList extends HookConsumerWidget {
         onLoadMore: onLoadMore,
         itemBuilder: (context, index) {
           final item = response!.data![index];
+          print(item.image);
           return AppFoodCard(
             name: '${item.name}',
             image: '${item.image}',
             restaurantName: '${item.restaurantName}',
             rating: '${item.avgRating}',
-            onTap: () => context.pushNamed(AppRoutes.restaurantDetails),
+            onTap: () => context.pushNamed(
+              AppRoutes.restaurantDetails,
+              queryParams: {
+                'productId': item.restaurantId.toString(),
+              },
+            ),
           );
         },
       ),

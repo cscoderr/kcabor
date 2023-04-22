@@ -34,15 +34,16 @@ class RestaurantPage extends HookConsumerWidget {
       [],
     );
 
-    return Scaffold(
-      appBar: KaborAppBar(
-        title: title,
-        trailing: AppFilterButton(
-          onTap: () => context.showFilterDialog(),
+    return KcaborLoader(
+      isLoading: false,
+      child: Scaffold(
+        appBar: KaborAppBar(
+          title: title,
+          trailing: AppFilterButton(
+            onTap: () => context.showFilterDialog(),
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
+        body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
