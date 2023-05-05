@@ -6,9 +6,11 @@ class FoodCard extends StatelessWidget {
   const FoodCard({
     super.key,
     this.onTap,
+    required this.name,
   });
 
   final VoidCallback? onTap;
+  final String name;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class FoodCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Poached Eggs',
+                name,
                 style: context.$style.titleSmall?.copyWith(
                   color: AppColors.dark,
                   fontWeight: FontWeight.w600,

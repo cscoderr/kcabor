@@ -3,7 +3,18 @@ import 'package:gap/gap.dart';
 import 'package:kabor/core/core.dart';
 
 class TransactionTile extends StatelessWidget {
-  const TransactionTile({super.key});
+  const TransactionTile({
+    super.key,
+    required this.amount,
+    required this.secondAmount,
+    required this.transactionDate,
+    required this.transactionTitle,
+  });
+
+  final String? transactionTitle;
+  final double? amount;
+  final DateTime? transactionDate;
+  final double? secondAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +30,14 @@ class TransactionTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Withdrawal',
+                transactionTitle ?? '',
                 textAlign: TextAlign.center,
                 style: context.$style.labelLarge?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
               ),
               Text(
-                '29th Sept, 2022. 4:09PM',
+                transactionDate.toString() ?? '29th Sept, 2022. 4:09PM',
                 textAlign: TextAlign.center,
                 style: context.$style.labelLarge?.copyWith(
                   color: AppColors.dark2,
@@ -39,7 +50,7 @@ class TransactionTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'N5000',
+              amount.toString() ?? 'N5000',
               textAlign: TextAlign.center,
               style: context.$style.labelLarge?.copyWith(
                 fontWeight: FontWeight.w600,
@@ -47,7 +58,7 @@ class TransactionTile extends StatelessWidget {
               ),
             ),
             Text(
-              'N295,000',
+              secondAmount.toString() ?? 'N295,000',
               textAlign: TextAlign.center,
               style: context.$style.labelLarge?.copyWith(
                 color: AppColors.dark2,

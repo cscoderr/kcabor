@@ -13,11 +13,13 @@ class GetProductDetails extends AsyncNotifier<RestaurantResponse> {
   }
 
   Future<void> getDetails(String productId) async {
+    print('reach');
     try {
       state = const AsyncValue.loading();
       final result = await ref.read(getRestaurantUsecasesProvider)(productId);
       state = AsyncValue.data(result);
     } catch (e, stackTrace) {
+      print(stackTrace.toString());
       state = AsyncValue.error(e, stackTrace);
     }
   }
@@ -25,4 +27,5 @@ class GetProductDetails extends AsyncNotifier<RestaurantResponse> {
 
 final getProductDetailsProvider =
     AsyncNotifierProvider<GetProductDetails, RestaurantResponse>(
-        GetProductDetails.new);
+  GetProductDetails.new,
+);

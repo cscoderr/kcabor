@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/core/core.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:smooth_infinite_scroll/smooth_infinite_scroll.dart';
 
 class AppFoodCardList extends HookConsumerWidget {
@@ -27,19 +28,66 @@ class AppFoodCardList extends HookConsumerWidget {
         scrollDirection: Axis.horizontal,
         hasError: hasError,
         hasMore: !hasReachedMax,
-        loader: const KcaborProgressIndicator(),
+        loader: const AppFoodCardListShimmer(),
         seperator: const SizedBox(width: 20),
         onLoadMore: onLoadMore,
         itemBuilder: (context, index) {
           final item = response!.data![index];
+          print(item.image);
           return AppFoodCard(
             name: '${item.name}',
             image: '${item.image}',
             restaurantName: '${item.restaurantName}',
             rating: '${item.avgRating}',
-            onTap: () => context.pushNamed(AppRoutes.restaurantDetails),
+            onTap: () => context.pushNamed(
+              AppRoutes.restaurantDetails,
+              queryParams: {
+                'productId': item.restaurantId.toString(),
+              },
+            ),
           );
         },
+      ),
+    );
+  }
+}
+
+class AppFoodCardListShimmer extends StatelessWidget {
+  const AppFoodCardListShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: SizedBox(
+        height: 200,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            return const AppFoodCardShimmer();
+          },
+          separatorBuilder: (context, index) {
+            return const SizedBox(width: 20);
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class AppFoodCardShimmer extends StatelessWidget {
+  const AppFoodCardShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 150,
+      width: 150,
+      decoration: BoxDecoration(
+        color: Colors.grey[300],
+        borderRadius: BorderRadius.circular(10),
       ),
     );
   }

@@ -11,7 +11,9 @@ class OrderDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const FoodCard(),
+        const FoodCard(
+          name: 'Chicken Burger',
+        ),
         const Gap(10),
         Row(
           children: const [

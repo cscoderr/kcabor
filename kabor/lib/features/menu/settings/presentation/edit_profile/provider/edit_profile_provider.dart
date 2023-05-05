@@ -1,3 +1,7 @@
+// ignore_for_file: unrelated_type_equality_checks
+
+import 'dart:io';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kabor/app/app.dart';
 import 'package:kabor/features/menu/menu.dart';
@@ -26,6 +30,7 @@ class EditProfileProvider extends StateNotifier<EditProfileState> {
       firstName: user.fName,
       lastName: user.lName,
       email: user.email,
+      image: state.image ?? File(''),
     );
   }
 
@@ -39,6 +44,10 @@ class EditProfileProvider extends StateNotifier<EditProfileState> {
 
   void onEmailChanged(String value) {
     state = state.copyWith(email: value);
+  }
+
+  void onImagehanged(File value) {
+    state = state.copyWith(image: value);
   }
 
   Future<void> updateProfile() async {

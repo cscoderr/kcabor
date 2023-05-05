@@ -47,9 +47,6 @@ class FoodTab extends HookConsumerWidget {
           const Gap(20),
           getHotDeals.when(
             data: (data) {
-              print('=======');
-              print(data.data?.length);
-              print('=======');
               return AppFoodCardList(
                 response: data,
                 hasError: ref.watch(getHotDealsVMProvider.notifier).hasError,
@@ -69,9 +66,7 @@ class FoodTab extends HookConsumerWidget {
             error: (error, stack) => Center(
               child: Text(error.toString()),
             ),
-            loading: () => const Center(
-              child: KcaborProgressIndicator(),
-            ),
+            loading: AppFoodCardListShimmer.new,
           ),
           const Gap(10),
           Text(
@@ -103,9 +98,7 @@ class FoodTab extends HookConsumerWidget {
             error: (error, stack) => Center(
               child: Text(error.toString()),
             ),
-            loading: () => const Center(
-              child: KcaborProgressIndicator(),
-            ),
+            loading: AppFoodCardListShimmer.new,
           ),
           const Gap(20),
         ],

@@ -1,3 +1,5 @@
+// ignore_for_file: cast_nullable_to_non_nullable
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -387,7 +389,8 @@ class AppRouter {
               path: AppRoutePaths.restaurantDetails,
               name: AppRoutes.restaurantDetails,
               builder: (BuildContext context, GoRouterState state) {
-                return const RestaurantDetailsPage();
+                final productId = state.queryParams['productId'] as String;
+                return RestaurantDetailsPage(productId: productId);
               },
             ),
           ],
@@ -535,7 +538,7 @@ class AppRouter {
               path: AppRoutePaths.editProfile,
               name: AppRoutes.editProfile,
               builder: (BuildContext context, GoRouterState state) {
-                return EditProfilePage();
+                return const EditProfilePage();
               },
             ),
           ],

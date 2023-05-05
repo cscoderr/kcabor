@@ -1,143 +1,215 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:kabor/core/core.dart';
+import 'package:kabor/features/food_category/food_category.dart';
+import 'package:kabor/features/restaurant/presentation/details/providers/food_by_category_provider.dart';
+import 'package:kabor/features/restaurant/presentation/details/providers/get_restuarant_details_provider.dart';
 import 'package:kabor/features/restaurant/restaurant.dart';
 
-class RestaurantDetailsPage extends StatefulWidget {
-  const RestaurantDetailsPage({super.key});
+class RestaurantDetailsPage extends StatefulHookConsumerWidget {
+  const RestaurantDetailsPage({super.key, required this.productId});
+
+  final String productId;
 
   @override
-  State<RestaurantDetailsPage> createState() => _RestaurantDetailsPageState();
+  _RestaurantDetailsPageState createState() => _RestaurantDetailsPageState();
 }
 
-class _RestaurantDetailsPageState extends State<RestaurantDetailsPage> {
+class _RestaurantDetailsPageState extends ConsumerState<RestaurantDetailsPage> {
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.showBookATableDialog();
+      // context.showBookATableDialog();
+      ref.read(getProductDetailsProvider.notifier).getDetails(widget.productId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(getProductDetailsProvider);
+    final foodCategoryState = ref.watch(foodByCategoryProvider);
+    final selectedMenu = useState(0);
+
+    ref.listen<AsyncValue<RestaurantResponse>>(getProductDetailsProvider,
+        (previous, state) {
+      state.maybeWhen(
+        orElse: () {},
+        data: (data) {
+          ref.read(foodByCategoryProvider.notifier).getFoodByCategory(
+                categoryId: data.categoryIds?.first.toString() ?? '0',
+              );
+        },
+      );
+    });
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Image.network(
-                      'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    left: 15,
-                    right: 15,
-                    top: 10,
-                    child: Row(
-                      children: const [
-                        AppBackButton(),
-                        Spacer(),
-                        AppInfoButton(),
-                      ],
-                    ),
-                  ),
+      body: state.when(
+        data: (data) {
+          final menus = ref
+              .read(getCategoryVMProvider.notifier)
+              .mapCategoryIdToCategory(data.categoryIds ?? []);
+          return CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                leading: const AppBackButton(),
+                expandedHeight: 300,
+                toolbarHeight: 50,
+                backgroundColor: AppColors.primaryColor,
+                pinned: true,
+                floating: true,
+                actions: const [
+                  AppInfoButton(),
                 ],
-              ),
-            ),
-            const Gap(10),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Image.network(
+                    'https://dev.kcabor.com/storage/app/public/restaurant/cover/${data.coverPhoto}',
+                    // 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1180&q=80',
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Poached - GRA, Ilorin',
-                      style: context.$style.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Iconsax.star1,
-                          color: AppColors.yellowColor,
-                        ),
-                        const Gap(5),
-                        Text(
-                          '4.5 (2.5k).Breakfast',
-                          style: context.$style.titleSmall!.copyWith(
-                            color: AppColors.dark2,
+              ),
+              const SliverToBoxAdapter(
+                child: Gap(10),
+              ),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              'https://dev.kcabor.com/storage/app/public/restaurant/${data.logo}',
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const Gap(5),
-                    Text(
-                      '30-45mins',
-                      style: context.$style.titleSmall!.copyWith(
-                        color: AppColors.primaryColor,
+                          const Gap(15),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                data.name ?? '',
+                                style: context.$style.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Iconsax.star1,
+                                    color: AppColors.yellowColor,
+                                  ),
+                                  const Gap(5),
+                                  Text(
+                                    '${data.avgRating} (${data.ratingCount})',
+                                    style: context.$style.titleSmall!.copyWith(
+                                      color: AppColors.dark2,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Gap(5),
+                              Text(
+                                '${data.deliveryTime} min',
+                                style: context.$style.titleSmall!.copyWith(
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    const Gap(20),
-                    Text(
-                      'Our Menu',
-                      style: context.$style.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
+                      const Gap(20),
+                      Text(
+                        'Our Menu',
+                        style: context.$style.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
-                    ),
-                    const FoodCategoryTab(
-                      items: [
-                        FoodCategoryTabItem(
-                          text: 'Eggs',
-                        ),
-                        FoodCategoryTabItem(
-                          text: 'Baked',
-                        ),
-                        FoodCategoryTabItem(
-                          text: 'Fried',
-                        ),
-                        FoodCategoryTabItem(
-                          text: 'Fruits',
-                        ),
-                        FoodCategoryTabItem(
-                          text: 'Fruits',
-                        ),
-                      ],
-                      currentIndex: 0,
-                    ),
-                    const Gap(20),
-                    Expanded(
-                      child: ListView.separated(
-                        itemCount: 10,
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Gap(20),
-                        itemBuilder: (BuildContext context, int index) {
-                          return FoodCard(
-                            onTap: () => context.pushNamed(AppRoutes.food),
-                          );
+                      FoodCategoryTab(
+                        onChanged: (value) {
+                          selectedMenu.value = value;
+                          ref
+                              .read(foodByCategoryProvider.notifier)
+                              .getFoodByCategory(
+                                categoryId: menus[value].id.toString(),
+                              );
                         },
+                        items: menus
+                            .map(
+                              (e) => FoodCategoryTabItem(
+                                text: e.name ?? '',
+                              ),
+                            )
+                            .toList(),
+                        currentIndex: selectedMenu.value,
                       ),
-                    ),
-                  ],
+                      const Gap(20),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+              foodCategoryState.when(
+                data: (foodCategory) {
+                  final food = foodCategory.data ?? [];
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                          ).add(
+                            const EdgeInsets.only(
+                              bottom: 20,
+                            ),
+                          ),
+                          child: FoodCard(
+                            name: food[index].name ?? '',
+                            onTap: () => context.pushNamed(AppRoutes.food),
+                          ),
+                        );
+                      },
+                      childCount: food.length,
+                    ),
+                  );
+                },
+                error: (error, _) {
+                  return SliverToBoxAdapter(
+                    child: Center(
+                      child: Text(error.toString()),
+                    ),
+                  );
+                },
+                loading: () {
+                  return const SliverToBoxAdapter(
+                    child: Center(
+                      child: KcaborProgressIndicator(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+        error: (error, _) {
+          return Center(
+            child: Text(error.toString()),
+          );
+        },
+        loading: () {
+          return const Center(
+            child: KcaborProgressIndicator(),
+          );
+        },
       ),
     );
   }

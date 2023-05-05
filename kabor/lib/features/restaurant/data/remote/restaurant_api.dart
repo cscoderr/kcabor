@@ -11,7 +11,11 @@ final restaurantApiProvider = Provider<RestaurantApiClient>((ref) {
 
 abstract class RestaurantApiClient {
   Future<RestaurantResponse> getRestaurantDetails(String restaurantId);
-  Future<void> restaurantsByCategory(String categoryId);
+  Future<PaginatedResponse<List<ProductResponse>>> foodByCategory({
+    required String categoryId,
+    int? offset,
+    int? limit,
+  });
 }
 
 class RestaurantApiClientImpl extends RestaurantApiClient {
@@ -23,8 +27,9 @@ class RestaurantApiClientImpl extends RestaurantApiClient {
 
   @override
   Future<RestaurantResponse> getRestaurantDetails(String restaurantId) async {
+    print(restaurantId);
     final response = await _httpClient.get(
-      '${AppConstants.baseUrl}/restaurant/details/$restaurantId',
+      Uri.parse('${AppConstants.baseUrl}/restaurants/details/$restaurantId'),
     );
 
     print(response.body);
@@ -41,5 +46,39 @@ class RestaurantApiClientImpl extends RestaurantApiClient {
   Future<void> restaurantsByCategory(String categoryId) {
     // TODO: implement restaurantsByCategory
     throw UnimplementedError();
+  }
+
+  @override
+  Future<PaginatedResponse<List<ProductResponse>>> foodByCategory({
+    required String categoryId,
+    int? offset,
+    int? limit,
+  }) async {
+    final response = await _httpClient.get(
+      Uri.parse('${AppConstants.baseUrl}/food/items/$categoryId').replace(
+        queryParameters: {
+          if (offset != null) 'offset': offset.toString(),
+          if (limit != null) 'limit': limit.toString(),
+        },
+      ),
+    );
+
+    print(response.body);
+
+    if (response.statusCode == HttpStatus.ok) {
+      final data = jsonDecode(response.body) as Map<String, dynamic>;
+      return PaginatedResponse.fromJson(
+        data,
+        (json) {
+          return (json as List)
+              .map(
+                (e) => ProductResponse.fromJson(e as Map<String, dynamic>),
+              )
+              .toList();
+        },
+      );
+    } else {
+      throw Exception('');
+    }
   }
 }

@@ -1,17 +1,20 @@
+// ignore_for_file: one_member_abstracts
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http_interceptor/http/http.dart';
 
-import '../../../../../core/core.dart';
+import 'package:kabor/core/core.dart';
+import 'package:kabor/features/menu/payment/data/models/wallet_response.dart';
 
 final paymentsApiProvider = Provider<PaymentApiClient>((ref) {
   return PaymentApiClientImpl(httpClient: ref.watch(mainhttpProvider));
 });
 
 abstract class PaymentApiClient {
-  Future<PaginatedResponse<List<ProductResponse>>> getPopularFood({
+  Future<PaginatedResponse<List<WalletResponse>>> getPayment({
     int? offset,
     int? limit,
   });
@@ -25,7 +28,7 @@ class PaymentApiClientImpl extends PaymentApiClient {
   final InterceptedHttp _httpClient;
 
   @override
-  Future<PaginatedResponse<List<ProductResponse>>> getPopularFood({
+  Future<PaginatedResponse<List<WalletResponse>>> getPayment({
     int? offset,
     int? limit,
   }) async {
@@ -46,7 +49,7 @@ class PaymentApiClientImpl extends PaymentApiClient {
         (json) {
           return (json as List)
               .map(
-                (e) => ProductResponse.fromJson(e as Map<String, dynamic>),
+                (e) => WalletResponse.fromJson(e as Map<String, dynamic>),
               )
               .toList();
         },
